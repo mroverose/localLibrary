@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  h1 #{title}: #{book.title}
+  p= book.author.name
+  p= book.author.lifespan_intro
+  p= book.summary
+
+  if book_instances.length
+    p #[strong Delete the following book instance before attempting to delete this book.]
+    div(style='margin-left:20px;margin-right:20px')
+
+
+      h4 Book Instance
+      each book_instance in book_instances
+        hr
+        if book_instance.status=='Available'
+          p.text-succuss #{book_instance.status}
+        else if book_instance.status=='Maintenance'
+          p.text-danger #{book_instance.status}
+        else
+          p.text-warning #{book_instance.status}
+        a(href=book_instance.url) #{book_instance._id}
+        p #[strong  出版社: #{book_instance.imprint}]
+        if book_instance.status=='Available'
+          p #[strong Due back:] #{book_instance.due_back_formatted}
+  else
+   p Do you really want to delete this book?
+   form(method='POST' action='')
+     div.form-group
+       input#bookid.form-control(type='hidden' name='bookid',required='true',value=book._id)
+     button.btn.btn-primary(type='submit') Delete
